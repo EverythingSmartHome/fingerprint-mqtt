@@ -1,0 +1,55 @@
+sensor:
+  - platform: mqtt
+    name: "Fingerprint"
+    state_topic: "/fingerprint/mode/status"
+    value_template: "{{value_json.state}}"
+    json_attributes_topic: "/fingerprint/mode/status"
+    json_attributes_template: "{{value_json | tojson}}"
+  - platform: template
+    sensors:
+      fingerprint_mode:
+        friendly_name: "Fingerprint Sensor Mode"
+        value_template: >-
+          {{state_attr('sensor.fingerprint', 'mode')}}
+        icon_template: >-
+          {% if is_state('sensor.fingerprint_mode', 'reading') %}
+            mdi:book-open-outline
+          {% elif is_state('sensor.fingerprint_mode', 'learning') %}
+            mdi:book-open-page-variant
+          {% endif %}
+      fingerprint_state:
+        friendly_name: "Fingerprint State"
+        value_template: >-
+          {{states('sensor.fingerprint')}}
+        icon_template: >-
+          {% if is_state('sensor.fingerprint', 'Waiting') %}
+            mdi:fingerprint
+          {% elif is_state('sensor.fingerprint', 'Matched') %}
+            mdi:fingerprint
+          {% elif is_state('sensor.fingerprint', 'Not matched') %}
+            mdi:fingerprint-off
+          {% endif %}
+      fingerprint_id:
+        friendly_name: "Fingerprint ID"
+        value_template: >-
+          {{state_attr('sensor.fingerprint', 'id')}}
+      fingerprint_person:
+        friendly_name: "Fingerprint Person"
+        value_template: >-
+          {% if is_state('sensor.fingerprint_id', '1') %}
+            Lewis
+          {% elif states.sensor.fingerprint_id.state | int > 1 %}
+            {{states.sensor.fingerprint_id.state}}
+          {% elif is_state('sensor.fingerprint', 'Waiting') %}
+            Waiting
+          {% elif is_state('sensor.fingerprint', 'Not matched') %}
+            Not matched
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.fingerprint', 'Waiting') %}
+            mdi:human-male
+          {% elif is_state('sensor.fingerprint', 'Matched') %}
+            mdi:human-greeting
+          {% elif is_state('sensor.fingerprint', 'Not matched') %}
+            mdi:police-badge
+          {% endif %}

@@ -1,0 +1,14 @@
+'1590438622575':
+  alias: Fingerprint learning mode
+  sequence:
+  - data:
+      payload_template: '{{states(''input_number.fingerprint_learning_id'') | int}}'
+      topic: home/fingerprint/mode/learning
+    service: mqtt.publish
+'1590488431995':
+  alias: Fingerprint Delete Print
+  sequence:
+  - data:
+      payload_template: '{{states(''input_number.fingerprint_learning_id'') | int}}'
+      topic: home/fingerprint/mode/delete
+    service: mqtt.publish
