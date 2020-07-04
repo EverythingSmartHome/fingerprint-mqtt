@@ -32,6 +32,8 @@
 #define mqtt_username                 "MQTT Username"
 #define mqtt_password                 "MQTT Password"
 
+#define MQTT_INTERVAL 5000            //MQTT rate limiting when no finger present, in ms
+
 #define SENSOR_TX 12                  //GPIO Pin for RX
 #define SENSOR_RX 14                  //GPIO Pin for TX
 
@@ -47,6 +49,7 @@ uint8_t lastConfidenceScore = 0;      //Stores the last matched confidence score
 boolean modeLearning = false;
 boolean modeReading = true;
 boolean modeDelete = false;
+unsigned long lastMQTTmsg = 0;	      //Stores millis since last MQTT message
 
 //Declare JSON variables
 DynamicJsonDocument mqttMessage(100);
@@ -101,6 +104,7 @@ void loop() {
       mqttMessage["confidence"] = lastConfidenceScore;
       size_t mqttMessageSize = serializeJson(mqttMessage, mqttBuffer);
       client.publish(STATE_TOPIC, mqttBuffer, mqttMessageSize);
+      lastMQTTmsg = millis();
       delay(500);
     } else if (result == FINGERPRINT_NOTFOUND) {
       mqttMessage["mode"] = "reading";
@@ -109,13 +113,20 @@ void loop() {
       mqttMessage["state"] = "Not matched";
       size_t mqttMessageSize = serializeJson(mqttMessage, mqttBuffer);
       client.publish(STATE_TOPIC, mqttBuffer, mqttMessageSize);
+      lastMQTTmsg = millis();
       delay(500);
     } else if (result == FINGERPRINT_NOFINGER) {
-      mqttMessage["mode"] = "reading";
-      mqttMessage["id"] = id;
-      mqttMessage["state"] = "Waiting";
-      size_t mqttMessageSize = serializeJson(mqttMessage, mqttBuffer);
-      client.publish(STATE_TOPIC, mqttBuffer, mqttMessageSize);
+	    if ((millis() - lastMQTTmsg) > MQTT_INTERVAL){
+		    mqttMessage["mode"] = "reading";
+		    mqttMessage["id"] = id;
+		    mqttMessage["state"] = "Waiting";
+		    size_t mqttMessageSize = serializeJson(mqttMessage, mqttBuffer);
+		    client.publish(STATE_TOPIC, mqttBuffer, mqttMessageSize);
+		    lastMQTTmsg = millis();
+	    }
+	    if ((millis() - lastMQTTmsg) < 0){
+		    lastMQTTmsg = millis();	    //Just in case millis ever rolls over
+	    }
     } else {
 
     }
