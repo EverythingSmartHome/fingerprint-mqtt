@@ -32,7 +32,7 @@
 #define mqtt_username                 "MQTT Username"
 #define mqtt_password                 "MQTT Password"
 
-#define MQTT_INTERVAL 5000            //MQTT rate limiting, in ms
+#define MQTT_INTERVAL 5000            //MQTT rate limiting when no finger present, in ms
 
 #define SENSOR_TX 12                  //GPIO Pin for RX
 #define SENSOR_RX 14                  //GPIO Pin for TX
