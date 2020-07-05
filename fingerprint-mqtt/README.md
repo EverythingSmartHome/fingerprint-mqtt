@@ -10,6 +10,13 @@ At time of writing the Adafruit fingerprint library doesn't have LED functionali
 
 Note I've only tested this with the sensor in the guide.
 
+# fingerprint-mqtt-led-touch.ino
+
+Same as fingerprint-mqtt-led.ino, but in addition implements module's built-in touch sensor to only turn on LED when a finger touches the glass. Module can still be disabled (regardless of finger detection) using the MQTT topic.
+
+**Note**: You must wire pins 4 and 5 of the FPM10A for this to work. Wire T-Out to D3 and T-3v to 3v. 
+
+
 ## Adafruit_Fingerprint.h
 
 Below the initial define section add this
