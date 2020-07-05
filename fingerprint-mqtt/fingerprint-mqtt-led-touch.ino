@@ -107,12 +107,13 @@ void loop() {
     size_t mqttMessageSize = serializeJson(mqttMessage, mqttBuffer);
     client.publish(STATE_TOPIC, mqttBuffer, mqttMessageSize);
 
-    while (fingerState == HIGH) {
-      fingerState = digitalRead(D3);
+    while (fingerState == HIGH) {         // Disable sensor while no finger
+      fingerState = digitalRead(D3); 
       delay(100);
     }
+  } else if (sensorOn == false) {        // Disable sensor regardless of finger presence
+    finger.CloseLED();
   } else {
-
     if (modeReading == true && modeLearning == false) {
       uint8_t result = getFingerprintID();
       if (result == FINGERPRINT_OK) {
