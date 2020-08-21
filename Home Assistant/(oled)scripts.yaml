@@ -1,0 +1,18 @@
+fingerprint_sensor_learn_mode:
+  alias: Fingerprint Sensor Learn Mode
+  mode: single
+  sequence:
+  - data_template:
+      payload: "{\n  \"request\": \"learn\",\n  \"id\": \"{{ states('input_number.fingerprint_learning_id')\
+        \ | int }}\"\n}"
+      topic: fingerprint_sensor/1/request
+    service: mqtt.publish
+fingerprint_sensor_delete_mode:
+  alias: Fingerprint Sensor Delete Mode
+  mode: single
+  sequence:
+  - data_template:
+      payload: "{\n  \"request\": \"delete\",\n  \"id\": \"{{ states('input_number.fingerprint_learning_id')\
+        \ | int }}\"\n}"
+      topic: fingerprint_sensor/1/request
+    service: mqtt.publish
