@@ -14,6 +14,15 @@ Note I've only tested this with the sensor in the guide.
 
 Same as fingerprint-mqtt-led.ino, but in addition implements module's built-in touch sensor to only turn on LED when a finger touches the glass. Module can still be disabled (regardless of finger detection) using the MQTT topic.
 
+# fingerprint-mqtt-led-touch-oled.ino
+
+Same as fingerprint-mqtt-led-touch.ino, but in addition implements OLED functionality.Note the following important changes!
+-MQTT structure differs from other methods:
+  -State topic publishes the state (ie: idle, reading, matched, not matched, learning, deleting), and the ID. Ex: {"state":"idle","id":"0"}
+  -Request topic is subscribed. Send "learn" or "delete" with the id for that action. Ex: {"request":"learn","id":"6"}
+  -Reply topic is subscribed. Send a message to display on the OLED to confirm your automation. This topic provides for 2 lines of text as a response. Ex: You want to use your right thumb (id 1) to arm your security system, and your left thumb (id 6) to disarm it. You setup an automation to arm on recieving from the state topic {"state":"matched","id":"1"}. In the automation, you publish an MQTT message to the reply topic {"line1":"HELLO IAN","line2":"SYSTEM ARMED"} to display on your OLED that the automation has fired. Repeat for left thumb (id 6), but with a disarmed message.
+
+
 **Note**: You must wire pins 4 and 5 of the FPM10A for this to work. Wire T-Out to D3 and T-3v to 3v. 
 
 
