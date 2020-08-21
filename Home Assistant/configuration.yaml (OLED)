@@ -1,7 +1,0 @@
-sensors:
-- platform: mqtt
-  name: Fingerprint Sensor 1
-  state_topic: "fingerprint_sensor/1/mode/status"
-  value_template: "{{value_json.state}}"
-  json_attributes_topic: "fingerprint1/mode/status"
-  json_attributes_template: "{{value_json | tojson}}"
