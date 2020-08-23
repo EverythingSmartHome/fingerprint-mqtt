@@ -23,8 +23,7 @@ Same as fingerprint-mqtt-led-touch.ino, but in addition implements OLED function
   - Request topic is subscribed. Send "learn" or "delete" with the id for that action. Ex: {"request":"learn","id":"6"}
   - Reply topic is subscribed. Send a message to display on the OLED to confirm your automation. This topic provides for 2 lines of text as a response. Ex: You want to use your right thumb (id 1) to arm your security system, and your left thumb (id 6) to disarm it. You setup an automation to arm on recieving from the state topic {"state":"matched","id":"1"}. In the automation, you publish an MQTT message to the reply topic {"line1":"HELLO IAN","line2":"SYSTEM ARMED"} to display on your OLED that the automation has fired. Repeat for left thumb (id 6), but with a disarmed message.
 - If using the included automation for the reply topic for Home Assistant, note that this requires you to be on at least 0.114 as it uses the "choose" condition. If you don't want to upgrade you can redo the automation to avoid using the "choose" functionality.
-
-
+- You'll need to add in the appropriate libraries for the OLED...see https://everythingsmarthome.co.uk/esp8266/adding-an-ssd1306-oled-display-to-any-project/
 
 **Note**: You must wire pins 4 and 5 of the FPM10A for this to work. Wire T-Out to D3 and T-3v to 3v. 
 
