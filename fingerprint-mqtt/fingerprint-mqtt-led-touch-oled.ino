@@ -209,6 +209,7 @@ void loop() {
     display.setTextSize(1);
     display.println(F("SCANNING"));
     display.display();
+    delay(250);            //give finger time to land and settle
     uint8_t result = getFingerprintID();
     if (result == FINGERPRINT_OK) {
       mqttMessage["state"] = "matched";
