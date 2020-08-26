@@ -1,0 +1,31 @@
+- id: '1597707852027'
+  alias: Fingerprint Sensor Reply
+  description: ''
+  trigger:
+  - platform: mqtt
+    topic: fingerprint_sensor/1/state
+  condition:
+  - condition: template
+    value_template: '{{ trigger.payload_json.state =="matched" }}'
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.payload_json.id==1 }}'
+      sequence:
+      - data:
+          payload: "{\n  \"line1\": \"HELLO IAN\",\n  \"line2\": \"SYSTEM ARMED\"\n\
+            }"
+          topic: fingerprint_sensor/1/reply
+        service: mqtt.publish
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.payload_json.id==6 }}'
+      sequence:
+      - data:
+          payload: "{\n  \"line1\": \"HELLO IAN\",\n  \"line2\": \"SYSTEM DISARMED\"\
+            \n}"
+          topic: fingerprint_sensor/1/reply
+        service: mqtt.publish
+    default: []
+  mode: single
