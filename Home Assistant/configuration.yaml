@@ -36,10 +36,11 @@ sensor:
       fingerprint_person:
         friendly_name: "Fingerprint Person"
         value_template: >-
-          {% if is_state('sensor.fingerprint_id', '1') %}
-            Lewis
-          {% elif states.sensor.fingerprint_id.state | int > 1 %}
-            {{states.sensor.fingerprint_id.state}}
+          {% if states('sensor.fingerprint_id') | int >= 1 %}
+            {%- set printid = states('sensor.fingerprint_id') | int -%}
+            {%- set prints = states("input_text.fingerprint_data") | from_json if states("input_text.fingerprint_data") else [] -%}
+            {%- set fingerprint = prints|selectattr('id', 'eq', states('sensor.fingerprint_id') | int) | first -%}
+            {{fingerprint["name"]}}
           {% elif is_state('sensor.fingerprint', 'Waiting') %}
             Waiting
           {% elif is_state('sensor.fingerprint', 'Not matched') %}
