@@ -8,11 +8,17 @@
   - service: input_text.set_value
     data_template:
       entity_id: input_text.fingerprint_data
-      value: '{% set print_id = states(''input_number.fingerprint_learning_id'') |
-        int %} {% set print_name = states(''input_text.fingerprint_learning_name'')
-        %} {% set prints = states(''input_text.fingerprint_data'') | from_json if
-        states(''input_text.fingerprint_data'') else [] %} {{ (prints|rejectattr(''id'',  ''eq'',
-        print_id) | list + [{''id'': print_id, ''name'': print_name}]) | tojson }}'
+      value: |-
+        {% if states('sensor.fingerprint_data') == "unknown" %}
+          {{"[]"}}
+        {% endif %}
+  - service: input_text.set_value
+    data_template:
+      entity_id: input_text.fingerprint_data
+      value: '{% set print_id = states(''input_number.fingerprint_learning_id'') | int %}
+      {% set print_name = states(''input_text.fingerprint_learning_name'') %}
+      {% set prints = states(''input_text.fingerprint_data'') | from_json if states(''input_text.fingerprint_data'') else [] %}
+      {{ (prints|rejectattr(''id'',  ''eq'', print_id) | list + [{''id'': print_id, ''name'': print_name}]) | tojson }}'
   mode: single
 '1590488431995':
   alias: Fingerprint Delete Print
@@ -24,8 +30,7 @@
   - service: input_text.set_value
     data_template:
       entity_id: input_text.fingerprint_data
-      value: '{%- set print_id = states(''input_number.fingerprint_learning_id'')|
-        int -%} {%- set prints = states(''input_text.fingerprint_data'') | from_json
-        if states(''input_text.fingerprint_data'') else [] -%} {{ (prints|rejectattr(''id'',
-        ''eq'', print_id)) | tojson }}'
+      value: '{%- set print_id = states(''input_number.fingerprint_learning_id'')| int -%}
+      {%- set prints = states(''input_text.fingerprint_data'') | from_json if states(''input_text.fingerprint_data'') else [] -%}
+      {{ (prints|rejectattr(''id'', ''eq'', print_id)) | list | tojson }}'
   mode: single
