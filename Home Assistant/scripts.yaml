@@ -9,7 +9,7 @@
     data_template:
       entity_id: input_text.fingerprint_data
       value: |-
-        {% if states('sensor.fingerprint_data') == "unknown" %}
+        {% if states('input_text.fingerprint_data') == "unknown" %}
           {{"[]"}}
         {% endif %}
   - service: input_text.set_value
