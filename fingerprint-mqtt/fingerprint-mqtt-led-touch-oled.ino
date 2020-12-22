@@ -23,6 +23,7 @@
 // Fingerprint Sensor
 #define SENSOR_TX 13                  //GPIO Pin for WEMOS RX, SENSOR TX
 #define SENSOR_RX 12                  //GPIO Pin for WEMOS TX, SENSOR RX
+#define SENSOR_TOUT 14                //GPIO Pin for SENSOR T_OUT
 
 // OLED
 #define OLED_RESET -1
@@ -122,7 +123,7 @@ void setup(){
   display.setTextColor(SSD1306_WHITE);
   display.cp437(true);
 
-  pinMode(D5, INPUT); // Connect D5 to T-Out (pin 5 on reader), T-3v to 3v
+  pinMode(SENSOR_TOUT, INPUT); // Connect D5 to T-Out (pin 5 on reader), T-3v to 3v
 
   display.setCursor(0, 0);
   display.println(F("Looking for sensor..."));
@@ -198,10 +199,10 @@ void loop() {
   display.println(F("READY"));
   display.display();
     
-  int fingerState = digitalRead(D5); // Read T-Out, normally HIGH (when no finger)
+  int fingerState = digitalRead(SENSOR_TOUT); // Read T-Out, normally HIGH (when no finger)
   
   if (fingerState == HIGH) {
-    finger.CloseLED();
+    finger.LEDcontrol(false);
   } else {
     display.clearDisplay();
     display.drawBitmap(70, 0, fingerprint_bmp, 128, 64, WHITE);
