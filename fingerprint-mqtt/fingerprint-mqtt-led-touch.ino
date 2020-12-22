@@ -99,7 +99,7 @@ void loop() {
   int fingerState = digitalRead(D3); // Read T-Out, normally HIGH (when no finger)
   
   if (fingerState == HIGH) {
-    finger.CloseLED();
+    finger.LEDcontrol(false);
     Serial.println("No Finger Detected");
     mqttMessage["mode"] = "reading";
     mqttMessage["id"] = id;
@@ -112,7 +112,7 @@ void loop() {
       delay(100);
     }
   } else if (sensorOn == false) {        // Disable sensor regardless of finger presence
-    finger.CloseLED();
+    finger.LEDcontrol(false);
   } else {
     if (modeReading == true && modeLearning == false) {
       uint8_t result = getFingerprintID();
