@@ -96,7 +96,7 @@ void loop() {
   }
 
   if (sensorOn == false) {
-    finger.CloseLED();
+    finger.LEDcontrol(false);
   } else {
 
     if (modeReading == true && modeLearning == false) {
