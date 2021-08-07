@@ -1,0 +1,12 @@
+- alias: alarm post to mqtt
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: alarm_control_panel.home_alarm
+  condition: []
+  action:
+  - service: mqtt.publish
+    data:
+      topic: alarm
+      payload: '{{trigger.to_state.state}}'
+  mode: single
