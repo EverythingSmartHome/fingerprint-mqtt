@@ -216,6 +216,11 @@ uint8_t getFingerprintID() {
 
   // OK converted!
   p = finger.fingerSearch();
+  if (p == FINGERPRINT_OK) {
+    Serial.println("Match!");
+    lastID = finger.fingerID;
+    lastConfidenceScore = finger.confidence;
+  }
     else if (p == FINGERPRINT_PACKETRECIEVEERR) {
     Serial.println("Communication error");
     finger.LEDcontrol(FINGERPRINT_LED_FLASHING, 50, FINGERPRINT_LED_RED, 5);
