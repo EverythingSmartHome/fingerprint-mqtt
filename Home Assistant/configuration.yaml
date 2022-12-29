@@ -1,10 +1,21 @@
+#Fingerprint mqtt topic [For Home Assistant version >= 2022.12.x]
+mqtt:
+  sensor:
+    - name: "Fingerprint"
+      state_topic: "/fingerprint/mode/status"
+      value_template: "{{value_json.state}}"
+      json_attributes_topic: "/fingerprint/mode/status"
+      json_attributes_template: "{{value_json | tojson}}"
+
 sensor:
-  - platform: mqtt
-    name: "Fingerprint"
-    state_topic: "/fingerprint/mode/status"
-    value_template: "{{value_json.state}}"
-    json_attributes_topic: "/fingerprint/mode/status"
-    json_attributes_template: "{{value_json | tojson}}"
+## The below commented code works on HomeAssistant version <= 2022.11.x
+## Comment the mqtt block above to use below code on older versions of HomeAssistant
+#  - platform: mqtt
+#    name: "Fingerprint"
+#    state_topic: "/fingerprint/mode/status"
+#    value_template: "{{value_json.state}}"
+#    json_attributes_topic: "/fingerprint/mode/status"
+#    json_attributes_template: "{{value_json | tojson}}"
   - platform: template
     sensors:
       fingerprint_mode:
