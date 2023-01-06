@@ -29,4 +29,6 @@ Same as fingerprint-mqtt-led-touch.ino, but in addition implements OLED function
 
 **Note**: You must wire pins 4 and 5 of the FPM10A for this to work.
  
+# fingerprint-R503-mqtt-led-WDT.ino
 
+This sketch is based off the default sketch used in the guide. Variations include the use of an R503 fingerprint sensor with different LED colours to indicate state of sensor. A watch dog has been included in case of system lockup. 
