@@ -29,6 +29,7 @@
 #define MODE_LEARNING                 "/fingerprint/mode/learning"
 #define MODE_READING                  "/fingerprint/mode/reading"
 #define MODE_DELETE                   "/fingerprint/mode/delete"
+#define MODE_REBOOT                   "/fingerprint/mode/reboot"
 #define AVAILABILITY_TOPIC            "/fingerprint/available"
 #define mqtt_username                 "MQTT Username"
 #define mqtt_password                 "MQTT Password"
@@ -108,7 +109,8 @@ void loop() {
     client.publish(STATE_TOPIC, mqttBuffer, mqttMessageSize);
 
     while (fingerState == HIGH) {         // Disable sensor while no finger
-      fingerState = digitalRead(D3); 
+      fingerState = digitalRead(D3);
+      client.loop();                      // So that MQTT messags are processed
       delay(100);
     }
   } else if (sensorOn == false) {        // Disable sensor regardless of finger presence
@@ -413,6 +415,7 @@ void reconnect() {
       client.subscribe(MODE_LEARNING);       //Subscribe to Learning Mode Topic
       client.subscribe(MODE_READING);
       client.subscribe(MODE_DELETE);
+      client.subscribe(MODE_REBOOT);
       client.subscribe(SENSOR_ENABLED_TOPIC);
     } else {
       Serial.print("failed, rc=");
@@ -486,5 +489,17 @@ void callback(char* topic, byte* payload, unsigned int length) {                
       sensorOn = false;
       Serial.println("Turning sensor off");
     }
+  }
+
+  if (strcmp(topic, MODE_REBOOT) == 0) {
+      Serial.println("Got MQTT reboot command");
+      mqttMessage["mode"] = "reboot";
+      mqttMessage["state"] = "Rebooting!";
+      size_t mqttMessageSize = serializeJson(mqttMessage, mqttBuffer);
+      client.publish(STATE_TOPIC, mqttBuffer, mqttMessageSize);
+      Serial.println("Rebooting!");
+      WiFi.disconnect();                                    // Drop current connection
+      delay(1000);
+      ESP.restart();
   }
 }
